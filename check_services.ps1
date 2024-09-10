@@ -19,19 +19,19 @@ foreach ($server in $servers) {
                 # Get the service status on the remote server
                 $serviceStatus = Get-Service -Name $service -ComputerName $server -ErrorAction Stop
                 if ($serviceStatus.Status -eq "Running") {
-                    $serverData.Services += @{
+                    $serverData.Services += [PSCustomObject]@{
                         Service = $service
                         Status = "Up"
                     }
                 } else {
-                    $serverData.Services += @{
+                    $serverData.Services += [PSCustomObject]@{
                         Service = $service
                         Status = "Down"
                     }
                 }
             } catch {
                 # If there's an error, such as the service not existing or server unreachable
-                $serverData.Services += @{
+                $serverData.Services += [PSCustomObject]@{
                     Service = $service
                     Status = "Service Not Found or Error"
                 }
@@ -40,7 +40,7 @@ foreach ($server in $servers) {
     } else {
         # If the server is not reachable, add an entry to indicate that
         foreach ($service in $services) {
-            $serverData.Services += @{
+            $serverData.Services += [PSCustomObject]@{
                 Service = $service
                 Status = "Server Unreachable"
             }
@@ -48,8 +48,8 @@ foreach ($server in $servers) {
     }
     
     # Add the server data to the final results
-    $serverResults += $serverData
+    $serverResults += [PSCustomObject]$serverData
 }
 
 # Output the results as JSON for integration with other scripts
-$serverResults | ConvertTo-Json
+$serverResults | ConvertTo-Json -Depth 3
