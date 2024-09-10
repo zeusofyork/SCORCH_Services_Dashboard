@@ -1,0 +1,29 @@
+/* static/style.css */
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.status {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+.status.up {
+    background-color: #4CAF50;  /* Green for Up */
+    color: white;
+}
+
+.status.down {
+    background-color: #f44336;  /* Red for Down */
+    color: white;
+}
