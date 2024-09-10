@@ -1,8 +1,14 @@
+# List of SCORCH servers and their corresponding services
+$servers = @("Server1", "Server2")  # Replace with actual SCORCH server names
+$services = @("OrchestratorRunbookService", "OrchestratorManagementService")  # Replace with actual SCORCH service names
+$serverResults = @()
+
 # Loop through each server
 foreach ($server in $servers) {
+    # Create a hashtable for the server and an empty array for services
     $serverData = @{
         Server = $server
-        Services = @()
+        Services = @()  # This will hold the list of service status objects
     }
     
     # Test if the server is reachable
