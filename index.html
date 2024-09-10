@@ -13,14 +13,22 @@
     <div class="container">
         <header>
             <h1>SCORCH Monitoring Dashboard</h1>
-            <p>Live status of servers and services</p>
         </header>
 
-        <main>
-            <section id="dashboard" class="status-list">
-                <!-- Status items will be dynamically inserted here -->
-            </section>
-        </main>
+        <div class="layout">
+            <aside class="server-status-table">
+                <h2>Server Status</h2>
+                <table id="server-status-table">
+                    <!-- Server status rows will be dynamically inserted here -->
+                </table>
+            </aside>
+
+            <main>
+                <section id="dashboard" class="status-list">
+                    <!-- Status of services will be dynamically inserted here -->
+                </section>
+            </main>
+        </div>
 
         <footer>
             <p>&copy; 2024 Your Company Name</p>
@@ -33,18 +41,37 @@
             const response = await fetch('/status');
             const data = await response.json();
             const dashboard = document.getElementById('dashboard');
+            const serverStatusTable = document.getElementById('server-status-table');
+
             dashboard.innerHTML = '';  // Clear the current content
+            serverStatusTable.innerHTML = '';  // Clear the current server status table
 
             data.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'status-item ' + (item.Status === 'Up' ? 'up' : 'down');
-                div.innerHTML = `
-                    <div class="status-header">
-                        <span class="status-title">${item.Service || item.Server}</span>
-                        <span class="status-badge">${item.Status}</span>
-                    </div>
-                `;
-                dashboard.appendChild(div);
+                // Create service status card
+                if (item.Service) {
+                    const div = document.createElement('div');
+                    div.className = 'status-item ' + (item.Status === 'Up' ? 'up' : 'down');
+                    div.innerHTML = `
+                        <div class="status-header">
+                            <span class="status-title">${item.Service}</span>
+                            <span class="status-badge">${item.Status}</span>
+                        </div>
+                    `;
+                    dashboard.appendChild(div);
+                }
+
+                // Create server status row
+                if (item.Server) {
+                    const row = document.createElement('tr');
+                    row.className = 'server-row';
+                    row.innerHTML = `
+                        <td class="server-name">${item.Server}</td>
+                        <td class="server-status">
+                            <span class="status-indicator ${item.Status === 'Up' ? 'green' : 'red'}"></span>
+                        </td>
+                    `;
+                    serverStatusTable.appendChild(row);
+                }
             });
         }
 
