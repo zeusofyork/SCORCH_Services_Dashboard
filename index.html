@@ -6,32 +6,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SCORCH Status Dashboard</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<h1>SCORCH Server and Service Status</h1>
-<div id="dashboard"></div>
+    <div class="container">
+        <header>
+            <h1>SCORCH Monitoring Dashboard</h1>
+            <p>Live status of servers and services</p>
+        </header>
 
-<script>
-    // Function to fetch the status and update the dashboard
-    async function fetchStatus() {
-        const response = await fetch('/status');
-        const data = await response.json();
-        const dashboard = document.getElementById('dashboard');
-        dashboard.innerHTML = '';  // Clear the current content
+        <main>
+            <section id="dashboard" class="status-list">
+                <!-- Status items will be dynamically inserted here -->
+            </section>
+        </main>
 
-        data.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'status ' + (item.Status === 'Up' ? 'up' : 'down');
-            div.textContent = `${item.Service || item.Server}: ${item.Status}`;
-            dashboard.appendChild(div);
-        });
-    }
+        <footer>
+            <p>&copy; 2024 Your Company Name</p>
+        </footer>
+    </div>
 
-    // Fetch the status every 5 seconds
-    setInterval(fetchStatus, 5000);
-    fetchStatus();  // Initial load
-</script>
+    <script>
+        // Function to fetch the status and update the dashboard
+        async function fetchStatus() {
+            const response = await fetch('/status');
+            const data = await response.json();
+            const dashboard = document.getElementById('dashboard');
+            dashboard.innerHTML = '';  // Clear the current content
+
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'status-item ' + (item.Status === 'Up' ? 'up' : 'down');
+                div.innerHTML = `
+                    <div class="status-header">
+                        <span class="status-title">${item.Service || item.Server}</span>
+                        <span class="status-badge">${item.Status}</span>
+                    </div>
+                `;
+                dashboard.appendChild(div);
+            });
+        }
+
+        // Fetch the status every 5 seconds
+        setInterval(fetchStatus, 5000);
+        fetchStatus();  // Initial load
+    </script>
 
 </body>
 </html>
